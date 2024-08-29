@@ -1,4 +1,4 @@
-import * as React from 'react'
+import {useEffect, useState} from 'react'
 import { styled, alpha } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -8,6 +8,8 @@ import InputBase from '@mui/material/InputBase'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import { Drawer } from '@mui/material'
+import { searchProduct } from '../redux/actions/search-action'
+import { useDispatch } from 'react-redux'
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -51,7 +53,16 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }))
 
 export default function SearchAppBar() {
-  const [open , setOpen ] = React.useState(false)
+  const dispatch = useDispatch()
+  const [open , setOpen ] = useState(false)
+  const [inputValue, setInputValue] = useState('')
+
+
+  useEffect(() => {
+    dispatch(searchProduct(inputValue))
+  }, [inputValue])
+  
+
   return (
     <>
       <AppBar position="static">
@@ -79,7 +90,9 @@ export default function SearchAppBar() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+            value={inputValue}
               placeholder="Search…"
+              onChange={(e) => setInputValue(e.target.value)}
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
